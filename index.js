@@ -4,6 +4,7 @@ const app = express();
 const cors = require("cors");
 require('dotenv').config();
 const blog = require("./routes/blog.js");
+const massage = require("./routes/massage.js");
 
 const mongoose = require("mongoose");
 app.use(express.json({ limit: "30mb", extended: true }));
@@ -11,6 +12,7 @@ app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
 app.use("/blog", blog);
+app.use("/massage", massage);
 
 
 const PORT = process.env.PORT || 5000;
