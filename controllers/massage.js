@@ -14,7 +14,7 @@ exports.addMassage = addMassage = async (req, res) => {
 
 exports.getMassage = getMassage = async (req, res) => {
     try {
-        const massage = MassageModel.find();
+        const massage = await MassageModel.find();
 
         res.status(200).json(massage);
     } catch (error) {
