@@ -4,7 +4,7 @@ const BlogSchema = mongoose.Schema({
     title: String,
     author: String,
     description: String,
-    imaURL: String,
+    imgURL: String,
 }, { timestamps: true });
 
 const BlogModel = mongoose.model("BlogModel", BlogSchema);

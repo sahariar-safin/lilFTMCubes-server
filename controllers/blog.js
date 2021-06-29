@@ -22,6 +22,7 @@ exports.getBlogByID = getBlogByID = async (req, res) => {
 
 exports.createBlogContent = createBlogContent = async (req, res) => {
     const Blog = req.body;
+    console.log(Blog)
     const newBlogContent = new BlogModel(Blog);
     try {
         await newBlogContent.save();
