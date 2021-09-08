@@ -1,33 +1,45 @@
+const express = require('express')
+const app = express()
+require('dotenv').config()
+const cors = require('cors')
+const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
+const port = process.env.PORT || 5000;
+const requireLogin = require('./middleware/requireLogin')
 
-const express = require("express");
-const app = express();
-const cors = require("cors");
-require('dotenv').config();
-const blog = require("./routes/blog.js");
-const massage = require("./routes/massage.js");
-
-const mongoose = require("mongoose");
-app.use(express.json({ limit: "30mb", extended: true }));
-app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
+app.use(express.json());
 
-app.use("/blog", blog);
-app.use("/massage", massage);
+const uri = process.env.DB_URL;
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+client.connect(err => {
+    const documents = client.db(`documents`).collection("documents");
 
-
-const PORT = process.env.PORT || 5000;
-mongoose
-    .connect(process.env.DB_URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
+    app.get('/documents/:type', (req, res) => {
+        documents.find({ type: req.params.type })
+            .toArray((err, results) => {
+                res.send(results);
+            })
     })
-    .then(() => {
-        console.log("DB Connected Successfully");
-    })
-    .catch((error) => {
-        console.log(error.message);
+
+    app.patch("/documents/update/:type", requireLogin, (req, res) => {
+        console.log(req.body, "working")
+        const updateData = req.body;
+        documents.updateOne(
+            { type: req.params.type },
+            { $set: { ...updateData } },
+            { upsert: true },
+            (err, results) => {
+                res.send(results);
+            })
     });
 
-app.listen(PORT, () => {
-    console.log("server is running on port", PORT);
 });
+
+app.get('/', (req, res) => {
+    res.send('Hello World!')
+})
+
+app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${ port }`)
+})
