@@ -37,12 +37,19 @@ client.connect(err => {
 
 });
 
-// const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "/build")));
-app.get("/*", function (req, res) {
-    res.sendFile(path.join(__dirname, "/build", "index.html"));
+
+
+// for client
+app.use(express.static(path.join(__dirname, "/client/build")));
+app.get("/", function (req, res) {
+    res.sendFile(path.join(__dirname, "/client/build", "index.html"));
 });
 
+// for admin
+app.use(express.static(path.join(__dirname, "/admin/build")));
+app.get("/admin", function (req, res) {
+    res.sendFile(path.join(__dirname, "/admin/build", "index.html"));
+});
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${ port }`)
