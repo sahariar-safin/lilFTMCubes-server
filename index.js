@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 require('dotenv').config()
+const path = require("path");
 const cors = require('cors')
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
@@ -36,9 +37,12 @@ client.connect(err => {
 
 });
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
+// const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "/build")));
+app.get("/*", function (req, res) {
+    res.sendFile(path.join(__dirname, "/build", "index.html"));
+});
+
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${ port }`)
